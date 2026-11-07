@@ -35,7 +35,6 @@
     info: $('#info-btn'),
     infoDialog: $('#info-dialog'),
     infoClose: $('#info-close'),
-    promptCards: document.querySelectorAll('.prompt-card'),
   };
 
   /* ---------------- Markdown (safe: escape first, then format) ---------------- */
@@ -482,12 +481,6 @@
   els.attachRemove.addEventListener('click', function () { setImage(null); els.input.focus(); });
 
   els.newChat.addEventListener('click', resetChat);
-
-  els.promptCards.forEach(function (card) {
-    card.addEventListener('click', function () {
-      sendMessage(card.getAttribute('data-prompt') || card.textContent);
-    });
-  });
 
   els.info.addEventListener('click', function () {
     if (typeof els.infoDialog.showModal === 'function') els.infoDialog.showModal();
