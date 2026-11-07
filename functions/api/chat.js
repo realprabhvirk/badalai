@@ -2,7 +2,7 @@
 // Secrets/bindings: GEMINI_API_KEY (secret), GEMINI_MODEL (optional var).
 // Never logs message text, history or image data.
 
-const DEFAULT_MODEL = 'gemini-3.6-flash';
+const DEFAULT_MODEL = 'gemini-3.5-flash-lite';
 const MAX_MESSAGE_CHARS = 4000;
 const MAX_HISTORY_ITEMS = 20;      // history actually sent to Gemini
 const MAX_HISTORY_RECEIVED = 40;   // reject anything bigger than this
@@ -208,11 +208,12 @@ export async function onRequestPost(context) {
     ],
   };
 
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
   let upstream;
-  try {
-    upstream = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-      {
+  // Retry once on transient overload (503) or 500 before giving up.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      upstream = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -221,15 +222,17 @@ export async function onRequestPost(context) {
         },
         body: JSON.stringify(geminiBody),
         signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
-      }
-    );
-  } catch (err) {
-    const timedOut = err && (err.name === 'TimeoutError' || err.name === 'AbortError');
-    return fail(
-      502,
-      timedOut ? 'timeout' : 'network',
-      timedOut ? 'Gemini took too long to respond. Please try again.' : 'Could not reach Gemini. Please try again.'
-    );
+      });
+    } catch (err) {
+      const timedOut = err && (err.name === 'TimeoutError' || err.name === 'AbortError');
+      return fail(
+        502,
+        timedOut ? 'timeout' : 'network',
+        timedOut ? 'Gemini took too long to respond. Please try again.' : 'Could not reach Gemini. Please try again.'
+      );
+    }
+    if (upstream.ok || (upstream.status !== 503 && upstream.status !== 500)) break;
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 1200));
   }
 
   if (!upstream.ok) {
