@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pa">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1a3a">
+  <meta name="description" content="BADAL AI: Punjab Di Gall, Badal AI De Naal. A fan-made AI character inspired by Sukhbir Singh Badal.">
+  <title>BADAL AI</title>
+  <link rel="icon" href="assets/akali-logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+Gurmukhi:wght@400;600&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-logo" src="assets/akali-logo.png" alt="Shiromani Akali Dal emblem" width="36" height="36">
+        <div class="brand-text">
+          <span class="wordmark">BADAL AI</span>
+          <span class="tagline">Punjab Di Gall, Badal AI De Naal.</span>
+        </div>
+        <span class="ai-pill" title="AI-generated character">AI</span>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" class="btn-ghost" id="new-chat-btn" aria-label="Start a new chat">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+          <span>New chat</span>
+        </button>
+        <button type="button" class="icon-btn" id="info-btn" aria-label="About Badal AI" aria-controls="info-dialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="stage-wrap">
+      <div class="stage-bg" aria-hidden="true">
+        <img src="assets/sukhbir-badal-hero.webp" alt="" width="738" height="414" decoding="async">
+        <div class="stage-overlay"></div>
+      </div>
+
+      <main class="stage" id="stage">
+        <section class="welcome" id="welcome">
+          <h1 class="welcome-title">Sat Sri Akal ji!</h1>
+          <p class="welcome-sub">Punjab di gall kariye?</p>
+          <p class="welcome-text">Ask me anything about Punjab, its history, culture, development or just have a chat.</p>
+          <div class="prompt-grid">
+            <button type="button" class="prompt-card" data-prompt="Tell me about Punjab's history">Tell me about Punjab's history</button>
+            <button type="button" class="prompt-card" data-prompt="Punjab de vikaas di gall kariye">Punjab de vikaas di gall kariye</button>
+            <button type="button" class="prompt-card" data-prompt="Sukhbir Badal baare dasso">Sukhbir Badal baare dasso</button>
+            <button type="button" class="prompt-card" data-prompt="Punjabi vich gall kariye">Punjabi vich gall kariye</button>
+          </div>
+        </section>
+
+        <section class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions"></section>
+      </main>
+    </div>
+
+    <footer class="composer-wrap">
+      <div class="attach-preview" id="attach-preview" hidden>
+        <img id="attach-thumb" alt="Attached image preview">
+        <span class="attach-name" id="attach-name"></span>
+        <button type="button" class="icon-btn small" id="attach-remove" aria-label="Remove attached image">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </div>
+
+      <form class="composer" id="composer" autocomplete="off">
+        <div class="composer-tools">
+          <button type="button" class="icon-btn" id="attach-btn" aria-label="Upload an image">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3" /><circle cx="9" cy="10" r="1.8" /><path d="M21 16l-5-5-8 8" /></svg>
+          </button>
+          <button type="button" class="icon-btn" id="camera-btn" aria-label="Take a photo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
+          </button>
+        </div>
+        <label class="sr-only" for="input">Message Badal AI</label>
+        <textarea id="input" rows="1" maxlength="4000" placeholder="Kuch poochho..."></textarea>
+        <button type="submit" class="send-btn" id="send-btn" aria-label="Send message" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+        </button>
+        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" hidden>
+        <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+      </form>
+
+      <p class="fineprint">
+        Badal AI is an AI-generated character inspired by Sukhbir Singh Badal. It is not him. Messages and images are processed by Google's Gemini API to create replies. Nothing is saved after you leave or refresh.
+      </p>
+    </footer>
+  </div>
+
+  <dialog class="info-dialog" id="info-dialog" aria-labelledby="info-title">
+    <div class="info-body">
+      <h2 id="info-title">About Badal AI</h2>
+      <p>Badal AI is a fan-made, AI-generated conversational character inspired by Sukhbir Singh Badal's public persona and the Shiromani Akali Dal. It is <strong>not</strong> Sukhbir Singh Badal and does not speak for him.</p>
+      <p>This experience was created by <strong>Prabh Virk</strong>, a supporter of Sukhbir Singh Badal.</p>
+      <p>Answers can be wrong or out of date. Check official sources such as <a href="https://sansad.in/" target="_blank" rel="noopener noreferrer">sansad.in</a> and <a href="https://shiromaniakalidal.com/" target="_blank" rel="noopener noreferrer">shiromaniakalidal.com</a> before relying on them.</p>
+      <p class="info-privacy">Conversations live only in this browser tab. Messages and images are sent to Google's Gemini API to generate replies.</p>
+      <button type="button" class="btn-primary" id="info-close">Close</button>
+    </div>
+  </dialog>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
