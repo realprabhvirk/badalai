@@ -2,7 +2,7 @@
 // Secrets/bindings: GEMINI_API_KEY (secret), GEMINI_MODEL (optional var).
 // Never logs message text, history or image data.
 
-const DEFAULT_MODEL = 'gemini-2.5-flash';
+const DEFAULT_MODEL = 'gemini-3.6-flash';
 const MAX_MESSAGE_CHARS = 4000;
 const MAX_HISTORY_ITEMS = 20;      // history actually sent to Gemini
 const MAX_HISTORY_RECEIVED = 40;   // reject anything bigger than this
@@ -194,8 +194,9 @@ export async function onRequestPost(context) {
   const geminiBody = {
     systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
     contents: buildContents(parsed),
+    // Sampling params (temperature, topP, topK) are left at model defaults:
+    // newer Gemini models reject them.
     generationConfig: {
-      temperature: 0.8,
       maxOutputTokens: 1024,
     },
     safetySettings: [
